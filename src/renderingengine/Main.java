@@ -9,45 +9,53 @@ import java.util.Scanner;
 import java.net.*;
 
 public class Main {
-	public static void main(String[] args) throws Exception {
-		Scanner sc = new Scanner(new File("./html.txt"));
+	
+	public static String fileToString(File f) throws FileNotFoundException {
+		Scanner sc = new Scanner(f);
 		String html = "";
 		while (sc.hasNextLine()) {
 			html += sc.nextLine();
 		}
-
-		/*
-		 * URL: https://stackoverflow.com/questions/31462/how-to-fetch-html-in-java How
-		 * to fetch html in java using absolute url path
-		 */
-
+		sc.close();
+		return html;
+	}
+	
+	/*
+	 * URL: https://stackoverflow.com/questions/31462/how-to-fetch-html-in-java How
+	 * to fetch html in java using absolute url path
+	 */
+	public static String htmlFromURLToString(URL url) throws IOException {
 		String content = null;
 		URLConnection connection = null;
 
-		connection = new URL("https://mileti.math.grinnell.edu/").openConnection();
+		connection = url.openConnection();
 		Scanner scanner = new Scanner(connection.getInputStream());
 		scanner.useDelimiter("\\Z");
 		content = scanner.next();
 		scanner.close();
-
-		// point html to content
-		html = content;
+		
+		return content;
+	}
+	
+	public static void main(String[] args) throws Exception {
+		
+		String html = fileToString(new File("./html.txt"));		
+		String htmlFromURL = htmlFromURLToString(new URL("https://mileti.math.grinnell.edu/"));
+		
+		// point html to htmlFromURL
+		html = htmlFromURL;
 		System.out.println("String:\n" + html);
 		
+		// cleans html of comments
 		html = HTMLParser.clean(html);
-		System.out.println("------------------------------------");
-		System.out.println(html);
+		
 		DOM dom = new HTMLParser(html).dom;
+		
+		// prints DOM
 		dom.print();
 		
-		
-		
-		
-		sc = new Scanner(new File("css.txt"));
-		String css = "";
-		while (sc.hasNextLine()) {
-			css += sc.nextLine();
-		}
+		String css = fileToString(new File("css.txt"));
+
 
 		Stylesheet sheet = new CSSParser(css).sheet;
 		StyleTree sty = new StyleTree(dom, sheet);
