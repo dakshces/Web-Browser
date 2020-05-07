@@ -3,6 +3,8 @@ package renderingengine;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CSSParser
 {
@@ -208,6 +210,25 @@ public class CSSParser
 		int hex = Integer.parseInt(input.substring(currPos,currPos+2), 16);
 		currPos += 2;
 		return hex;
+	}
+	
+	/**
+	 * Removes the comments from an CSS string
+	 * Source : https://www.regextester.com/94246
+	 * @param css
+	 * @return
+	 */
+	public static String clean(String css) {
+
+		Pattern pxPattern = Pattern.compile("\\/\\*[\\s\\S]*?\\*\\/|([^:]|^)\\/\\/.*");
+		Matcher pxMatcher = pxPattern.matcher(css);
+
+		while (pxMatcher.find()) {
+			String htmlString = pxMatcher.group();
+			css = css.replace(htmlString, "");
+		}
+
+		return css;
 	}
 
 }

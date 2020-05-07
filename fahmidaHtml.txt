@@ -1,0 +1,88 @@
+<html lang="en">
+<head>
+<title>homepage: fahmida</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style_files/my_style.css">
+</head>
+<body>
+<div class="topnav">
+  <a href="courses.html">Courses</a>
+  <a href="#">Research</a>
+  <a href="education.html">Education</a>
+  <a href="#">Teaching Experience</a>
+</div>
+
+
+<div class="header">
+ 	<div class= "row">
+       		 <div class="column">
+                      <div></br><p>   </p></div>  
+                      <img align="center" src="images/16_703_Hamid_Fahmida_008.jpg" alt="fh photo">
+ 			
+		</div>
+		<div class="column2">
+			 <div></br><p>   </p></div>
+                        <h2>Fahmida Hamid </h2>
+                        <h3> Visiting Assistant Professor</br>
+                          Department of Computer Science</br>
+                          Grinnell College</br>Grinnell, Iowa 50112</br></h1>
+                         <h4>Office: Noyce-2611</br>Phone: 641-269-3271</br>
+                             Email: hamidfah@grinnell.edu</br>
+                             Office Hours: </br>
+					 &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;  Tue (3:30 PM ~ 4:30 PM) </br>
+					 &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; Thurs (3:00 PM ~ 5:00 PM)</br>
+					 &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; Wed (4:00 PM ~ 5:00 PM)</br>
+				</h4>
+			<a href = "https://app.acuityscheduling.com/schedule.php?owner=19298151"> Book One-to-One Meeting</a>
+                        </div> 
+		<div class="column"> </div>
+		</div>
+		<div class = "row">
+		<div class="column3">
+                <p><h4>Recent ...</h4></p></br>
+                <p>I am very happy to inform you that, Linh Tang's (one of my summer 2019 research students) work has been accepted at 
+		 <a href = "https://www.flairs-33.info/home"> the 33rd International FLAIRS Conference</a> for presentation.
+		 My warmest congratulations to Linh for being an exceptionally hard working and talented student.  
+                </p>
+
+		<p>
+		 I am also excited that I will be presenting my article about an experience-report on 
+                 developing a research-focused course for undergraduate students at <a href = "https://www.ccsc.org/centralplains/"> CCSC Central Plains Region 2020</a>
+		 in coming April. 
+               </p>
+
+		</div></div>
+
+		<div class="column3">
+		<p><h4>More ...</h4></p></br>
+		<p>I have been working with the Department of Computer Science, Grinnell College since Aug 2018. My contract ends by May 2020.</br>
+		    In Fall 2019, I taught Algorithm Analysis & Design (CSC 301) and a Special Topic Course: Information Retrieval (CSC 395).</br>
+
+		    My research interests are in the area of Information Retrieval (IR) and Natural Language Processing (NLP).</br>
+		    In summer 2019, I conducted a 10-week research lab on Analysis of Recommender Systems, a special research track of IR. I directed six students.</br>
+
+		    Two of my research students (<b>Linh Tang</b> and <b>Erin Scherl</b>) won the best poster awards in two different events
+		    (<b>CCSC-Midwest 2019</b> and <b>MINK-WIC 2019</b>). My warmest congratulations to them.</br> 
+
+		</p></div></div>	
+	</div>
+</div>
+<!--
+<div class="row">
+  <div class="column">
+    <h2>Office Hours</h2>
+     <p><h3>Fall 2018</h3></br> Tue/Thur </br>1:30 pm - 3:30 pm </br></  </div>
+  <div class="column">
+    <h2>Column</h2>
+    <p> under construction ...</p>
+  </div>
+ <!--  <div class="column">
+    <h2>Column</h2>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sit amet pretium urna. Vivamus venenatis velit nec neque ultricies, eget elementum magna tristique. Quisque vehicula, risus eget aliquam placerat, purus leo tincidunt eros, eget luctus quam orci in velit. Praesent scelerisque tortor sed accumsan convallis.</p>
+  </div>
+</div>  -->
+
+</body>
+</html>
+
