@@ -14,19 +14,19 @@ public class HTMLParser {
 	String input;
 	DOM dom;
 
-	public HTMLParser(String input) {
+	public HTMLParser(String input) throws Exception {
 		this.currPos = 0;
 		this.input = input;
 		this.dom = parse();
 		int x = 1;
 	}
 
-	public DOM parse() {
+	public DOM parse() throws Exception{
 		ArrayList<Node> nodes = parseNodes();
-		if (nodes.size() == 1)
-			return new DOM(nodes.get(0));
+		if (nodes.size() == 0)
+			throw new Exception("DOM is empty");
 
-		return new DOM(new Element(nodes, "html", new HashMap<String, String>()));
+		return new DOM(nodes.get(0));
 
 	}
 
@@ -150,12 +150,10 @@ public class HTMLParser {
 
 	// Strips html string of comments
 	// source
-	// https://stackoverflow.com/questions/12351542/remove-matching-string-using-regular-expression-in-java/47160421
-	// source
-	// https://stackoverflow.com/questions/1919982/regex-smallest-possible-match-or-nongreedy-match
+	// https://stackoverflow.com/questions/1084741/regexp-to-strip-html-comments
 	public static String clean(String html) {
 
-		Pattern pxPattern = Pattern.compile("<!-.*?-->");
+		Pattern pxPattern = Pattern.compile("(?=<!--)([\\s\\S]*?)-->");
 		Matcher pxMatcher = pxPattern.matcher(html);
 
 		while (pxMatcher.find()) {
@@ -169,13 +167,15 @@ public class HTMLParser {
 
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		new HTMLParser("<html>\n" + "    <body>\n" + "        <h1>Title</h1>\n"
 				+ "        <div id=\"main\" class=\"test\">\n" + "            <p>Hello <em>world</em>!</p>\n"
 				+ "        </div>\n" + "    </body>\n" + "</html>");
 
 		new HTMLParser("<html>\n" + "<body>\n" + "\n" + "<h1>My First Heading</h1>\n" + "\n"
 				+ "<p>My first paragraph.</p>\n" + "\n" + "</body>\n" + "</html>\n" + "\n" + "");
+		
+		
 
 	}
 
