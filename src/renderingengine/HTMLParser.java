@@ -9,10 +9,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class HTMLParser {
+	
+	// +--------+-------------------------------------------------
+	// | Fields |
+	// +--------+
+	
 	int currPos;
 	String input;
 	DOM dom;
 
+	
+	// +--------------+---------------------------------------------
+	// | Constructors |
+	// +--------------+
+	
 	/**
 	 * Constructor
 	 * @param input, a string representation of html
@@ -23,7 +33,11 @@ public class HTMLParser {
 		this.input = input;
 		this.dom = parse();
 		int x = 1;
-	}
+	} // HTMLParser(String)
+	
+	// +---------+----------------------------------------------
+	// | Methods |
+	// +---------+
 
 	/**
 	 * Creates a DOM object tree of the html string input
@@ -37,7 +51,7 @@ public class HTMLParser {
 
 		return new DOM(nodes.get(0));
 
-	}
+	} // parse()
 
 	/**
 	 * Creates an array implementation of the DOM tree
@@ -53,7 +67,7 @@ public class HTMLParser {
 			consumeWhiteSpace();
 		}
 		return nodes;
-	}
+	} // parseNodes()
 
 	/**
 	 * Checks if our parser has reached the end of the html string.
@@ -61,7 +75,7 @@ public class HTMLParser {
 	 */
 	public boolean eof() {
 		return (currPos >= input.length());
-	}
+	} // eof()
 
 	/**
 	 * 
@@ -70,7 +84,7 @@ public class HTMLParser {
 	 */
 	public boolean beginsWith(String str) {
 		return (input.substring(currPos, currPos + str.length())).compareTo(str) == 0;
-	}
+	} // beginsWith(String)
 
 	/**
 	 * Creates a substring starting with the char at currpos of the String input
@@ -92,7 +106,7 @@ public class HTMLParser {
 			currPos++;
 		}
 		return res;
-	}
+	} // consumeWhile(Predicate)
 
 	/**
 	 * Creates a complete Node and its corresponding children starting from currpos
@@ -103,14 +117,14 @@ public class HTMLParser {
 		if (input.charAt(currPos) == '<')
 
 			// this checks for /br tag
-			if (input.substring(currPos, currPos + 5).compareTo("</br>") == 0) {
+			if (beginsWith("</br>")) {
 				currPos += 5;
 				return new Element(new ArrayList<Node>(), "br", new HashMap<String, String>());
 			} else
 				return parseElement();
 		else
 			return parseText();
-	}
+	} // parseNode()
 
 	/**
 	 * Creates an Element Node along with its corresponding children
@@ -132,19 +146,20 @@ public class HTMLParser {
 			currPos++; // skip >
 			return new Element(children, tagName, attributes);
 		}
-	}
+	} // parseElement()
 
 	/**
 	 * Checks if a html tag name corresponds to an html single tag
-	 * @param tagName
-	 * @return
+	 * @param tagName. a String
+	 * @return returns true if tagName is a singleton tag; false otherwise
 	 */
 	public boolean isSingleTagElement(String tagName) {
 		return (tagName.compareTo("hr") == 0) || (tagName.compareTo("br") == 0) || (tagName.compareTo("IMG") == 0) || (tagName.compareTo("link") == 0);
-	}
+	} // isSingleTagElement(String)
 
 	/**
 	 * Retrieves the attributes of an html tag found in its opening tag
+	 * as a HashMap
 	 * @return
 	 */
 	public HashMap<String, String> parseAttributes() {
@@ -163,7 +178,7 @@ public class HTMLParser {
 			curr = input.charAt(currPos);
 		}
 		return attributes;
-	}
+	} // parseAttributes()
 
 	/**
 	 * Constructs a Text Node
@@ -171,7 +186,7 @@ public class HTMLParser {
 	 */
 	public Text parseText() {
 		return new Text(consumeWhile(c -> c != '<'));
-	}
+	} // parseText()
 
 	/**
 	 * Changes currpos to the index of the next non-whitespace character.
@@ -179,7 +194,7 @@ public class HTMLParser {
 	 */
 	public void consumeWhiteSpace() {
 		consumeWhile(c -> Character.isWhitespace(c));
-	}
+	} // consumeWhiteSpace()
 
 	/**
 	 * Determines the tag name of the html tag whose
@@ -188,7 +203,7 @@ public class HTMLParser {
 	 */
 	public String parseName() {
 		return consumeWhile(c -> Character.isLetterOrDigit(c));
-	}
+	} // parseName()
 
 	/**
 	 * Retrieves the attributes of the html tag
@@ -203,7 +218,7 @@ public class HTMLParser {
 			return consumeWhile(c -> !Character.isWhitespace(c));
 		}
 
-	}
+	} // parseAttrValue()
 
 	
 	/**
@@ -223,7 +238,7 @@ public class HTMLParser {
 		}
 
 		return html;
-	}
+	} // clean(String)
 
 	public static void main(String[] args) throws Exception {
 		new HTMLParser("<html>\n" + "    <body>\n" + "        <h1>Title</h1>\n"
@@ -235,6 +250,6 @@ public class HTMLParser {
 		
 		
 
-	}
+	} // main(String[])
 
 } // HTMLParser
