@@ -1,3 +1,5 @@
+package renderingengine;
+
 import java.util.ArrayList;
 
 public class Stylesheet 
@@ -13,6 +15,16 @@ public class Stylesheet
 	{
 		this.rules = rules;
 	}
+	
+	@Override
+	public String toString() {
+		String str = "";
+		for (Rule r : rules) {
+			str += r.toString() + "\n";
+		}
+		
+		return str;
+	}
 }
 
 class Rule
@@ -24,6 +36,16 @@ class Rule
 	{
 		this.selectors = selectors;
 		this.declarations = declarations;
+	}
+	
+	@Override
+	public String toString() {
+		String str = "";
+		str += selectors;
+		for (int i = 0; i < declarations.size(); i++) {
+			str += "\t" + declarations.get(i) + "\n";
+		}
+		return str;
 	}
 }
 
@@ -46,6 +68,8 @@ class Selector implements Comparable<Selector>
 	
 		return obj.spec.c - this.spec.c;
 	}
+	
+
 
 }
 
@@ -81,6 +105,13 @@ class SimpleSelector extends Selector
 		classes.add(clas);
 		spec.b++;
 	}
+	
+	@Override
+	public String toString() {
+		String str = "";
+		str += tagName + id + classes;
+		return str;
+	}
 }
 
 class Declaration
@@ -103,6 +134,13 @@ class Declaration
 	public void setValue(Value value)
 	{
 		this.value = value;
+	}
+	
+	@Override
+	public String toString() {
+		String str = "";
+		str += name + "=" + value;
+		return str;
 	}
 }
 
@@ -150,6 +188,11 @@ class Keyword extends Value
 		super();
 		this.name = name;
 	}
+	
+	@Override
+	public String toString() {
+		return name;
+	}
 }
 
 class Length extends Value
@@ -181,6 +224,11 @@ class Color extends Value
 		this.g = g;
 		this.b = b;
 		this.a = a;
+	}
+	
+	@Override
+	public String toString() {
+		return "(" + r + "," + g + "," + b + ")";
 	}
 }
 
