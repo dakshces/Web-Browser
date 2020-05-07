@@ -1,3 +1,5 @@
+package renderingengine;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,6 +27,11 @@ public class Node
 		{
 			super();
 			this.txt = txt;
+		}
+		
+		@Override
+		public String toString() {
+			return txt;
 		}
 	}
 
@@ -67,6 +74,11 @@ public class Node
 			}
 			
 			return value;
+		}
+		
+		@Override
+		public String toString() {
+			return tagName + " " + attributes.toString();
 		}
 	}
 
