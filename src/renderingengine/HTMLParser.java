@@ -10,10 +10,14 @@ import java.util.regex.Pattern;
 
 public class HTMLParser {
 	int currPos;
-	Queue elementTagsSeen = new PriorityQueue<Node>();
 	String input;
 	DOM dom;
 
+	/**
+	 * Constructor
+	 * @param input, a string representation of html
+	 * @throws Exception
+	 */
 	public HTMLParser(String input) throws Exception {
 		this.currPos = 0;
 		this.input = input;
@@ -21,6 +25,11 @@ public class HTMLParser {
 		int x = 1;
 	}
 
+	/**
+	 * Creates a DOM object tree of the html string input
+	 * @return
+	 * @throws Exception
+	 */
 	public DOM parse() throws Exception{
 		ArrayList<Node> nodes = parseNodes();
 		if (nodes.size() == 0)
@@ -30,6 +39,10 @@ public class HTMLParser {
 
 	}
 
+	/**
+	 * Creates an array implementation of the DOM tree
+	 * @return an array implementation of a tree
+	 */
 	public ArrayList<Node> parseNodes() {
 		ArrayList<Node> nodes = new ArrayList<Node>();
 		consumeWhiteSpace();
@@ -42,14 +55,30 @@ public class HTMLParser {
 		return nodes;
 	}
 
+	/**
+	 * Checks if our parser has reached the end of the html string.
+	 * @return
+	 */
 	public boolean eof() {
 		return (currPos >= input.length());
 	}
 
+	/**
+	 * 
+	 * @param str
+	 * @return
+	 */
 	public boolean beginsWith(String str) {
 		return (input.substring(currPos, currPos + str.length())).compareTo(str) == 0;
 	}
 
+	/**
+	 * Creates a substring starting with the char at currpos of the String input
+	 * to up until the char fails to satisfy charTest
+	 * @param charTest, a Predicate
+	 * @return the first substring starting from currpos consisting only of characters 
+	 * satisfying the Predicate charTest
+	 */
 	public String consumeWhile(Predicate<Character> charTest) {
 		String res = "";
 
@@ -65,6 +94,10 @@ public class HTMLParser {
 		return res;
 	}
 
+	/**
+	 * Creates a complete Node and its corresponding children starting from currpos
+	 * @return
+	 */
 	public Node parseNode() {
 		char c = input.charAt(currPos);
 		if (input.charAt(currPos) == '<')
@@ -79,6 +112,10 @@ public class HTMLParser {
 			return parseText();
 	}
 
+	/**
+	 * Creates an Element Node along with its corresponding children
+	 * @return
+	 */
 	public Element parseElement() {
 		currPos++; // skip opening tag
 
@@ -87,26 +124,29 @@ public class HTMLParser {
 		currPos++; // skip ending tag
 		// first check if tagName corresponds to a single tag element
 		if (isSingleTagElement(tagName)) {
-			Element e = new Element(new ArrayList<Node>(), tagName, attributes);
-			//System.out.println(e);
-			return e;
+			return new Element(new ArrayList<Node>(), tagName, attributes);
 		} else {
 			ArrayList<Node> children = parseNodes();
 			currPos += 2; // skip </
 			parseName();
 			currPos++; // skip >
-			Element e = new Element(children, tagName, attributes);
-			//System.out.println(e);
-			return e;
+			return new Element(children, tagName, attributes);
 		}
 	}
 
-	// this could be improved to check
-	// a file containing single tag elements
+	/**
+	 * Checks if a html tag name corresponds to an html single tag
+	 * @param tagName
+	 * @return
+	 */
 	public boolean isSingleTagElement(String tagName) {
-		return (tagName.compareTo("br") == 0) || (tagName.compareTo("IMG") == 0) || (tagName.compareTo("link") == 0);
+		return (tagName.compareTo("hr") == 0) || (tagName.compareTo("br") == 0) || (tagName.compareTo("IMG") == 0) || (tagName.compareTo("link") == 0);
 	}
 
+	/**
+	 * Retrieves the attributes of an html tag found in its opening tag
+	 * @return
+	 */
 	public HashMap<String, String> parseAttributes() {
 		HashMap<String, String> attributes = new HashMap<String, String>();
 		char curr = input.charAt(currPos);
@@ -125,18 +165,35 @@ public class HTMLParser {
 		return attributes;
 	}
 
+	/**
+	 * Constructs a Text Node
+	 * @return
+	 */
 	public Text parseText() {
 		return new Text(consumeWhile(c -> c != '<'));
 	}
 
+	/**
+	 * Changes currpos to the index of the next non-whitespace character.
+	 * currpos is unchanged if input.charAt(currpos) is not a whitespace character.
+	 */
 	public void consumeWhiteSpace() {
 		consumeWhile(c -> Character.isWhitespace(c));
 	}
 
+	/**
+	 * Determines the tag name of the html tag whose
+	 * '<' is at currpos
+	 * @return
+	 */
 	public String parseName() {
 		return consumeWhile(c -> Character.isLetterOrDigit(c));
 	}
 
+	/**
+	 * Retrieves the attributes of the html tag
+	 * @return
+	 */
 	public String parseAttrValue() {
 		char open = input.charAt(currPos);
 		if ((open == '"') | (open == '\'')) {
@@ -148,23 +205,24 @@ public class HTMLParser {
 
 	}
 
-	// Strips html string of comments
-	// source
-	// https://stackoverflow.com/questions/1084741/regexp-to-strip-html-comments
+	
+	/**
+	 * Removes the comments from an html string
+	 * Source : https://stackoverflow.com/questions/1084741/regexp-to-strip-html-comments
+	 * @param html
+	 * @return
+	 */
 	public static String clean(String html) {
 
 		Pattern pxPattern = Pattern.compile("(?=<!--)([\\s\\S]*?)-->");
 		Matcher pxMatcher = pxPattern.matcher(html);
 
 		while (pxMatcher.find()) {
-			//System.out.println(pxMatcher.group());
 			String htmlString = pxMatcher.group();
 			html = html.replace(htmlString, "");
-
 		}
 
 		return html;
-
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -179,4 +237,4 @@ public class HTMLParser {
 
 	}
 
-}
+} // HTMLParser
