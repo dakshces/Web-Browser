@@ -8,10 +8,18 @@ import java.util.regex.Pattern;
 
 public class CSSParser
 {
+	// +--------+------------------------------------------------------
+	// | Fields |
+	// +--------+
 	int currPos;
 	String input;
 	Stylesheet sheet;
 
+	// +-------------+-------------------------------------------
+	// | Constructor |
+	// +-------------+
+	
+	
 	public CSSParser(String input)
 	{
 		this.currPos = 0;
@@ -20,6 +28,10 @@ public class CSSParser
 		int x = 1;
 	}
 
+	// +---------+---------------------------------------------
+	// | Methods |
+	// +---------+
+	
 	public Stylesheet parse()
 	{
 		ArrayList<Rule> rules = new ArrayList<Rule>();
@@ -35,10 +47,14 @@ public class CSSParser
 		return new Stylesheet(rules);
 	}
 
+	/**
+	 * Checks if our parser has reached the end of the html string.
+	 * @return
+	 */
 	public boolean eof()
 	{
 		return (currPos >= input.length());
-	}
+	} // eof()
 
 	public String consumeWhile(Predicate<Character> charTest)
 	{
@@ -214,6 +230,7 @@ public class CSSParser
 	
 	/**
 	 * Removes the comments from an CSS string
+	 * We will assume no tags in CSS
 	 * Source : https://www.regextester.com/94246
 	 * @param css
 	 * @return
@@ -229,6 +246,7 @@ public class CSSParser
 		}
 
 		return css;
-	}
+	} // clean(String)
 
-}
+} // Class CSSParser
+
