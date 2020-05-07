@@ -10,6 +10,12 @@ import java.net.*;
 
 public class Main {
 	
+	/**
+	 * Constructs a string aggregate of each line in a file
+	 * @param f
+	 * @return
+	 * @throws FileNotFoundException
+	 */
 	public static String fileToString(File f) throws FileNotFoundException {
 		Scanner sc = new Scanner(f);
 		String html = "";
@@ -18,11 +24,13 @@ public class Main {
 		}
 		sc.close();
 		return html;
-	}
+	} // fileToString(File)
 	
-	/*
-	 * URL: https://stackoverflow.com/questions/31462/how-to-fetch-html-in-java How
-	 * to fetch html in java using absolute url path
+	/**
+	 * Returns a String representation of a file from a URL
+	 * Source : https://stackoverflow.com/questions/31462/how-to-fetch-html-in-java
+	 * @return
+	 * @throws IOException
 	 */
 	public static String fileFromURLToString(URL url) throws IOException {
 		String content = null;
@@ -35,26 +43,36 @@ public class Main {
 		scanner.close();
 		
 		return content;
-	}
+	} // fileFromURLToString(URL)
 	
 	public static void main(String[] args) throws Exception {
 		
-		String html = fileToString(new File("./html.txt"));		
-		String css = fileToString(new File("./css.txt"));
-
-		String htmlFromURL = fileFromURLToString(new URL("https://paulhus.math.grinnell.edu/"));
-		String cssFromURL = fileFromURLToString(new URL("https://paulhus.math.grinnell.edu/jen2.css"));
-		// point html to htmlFromURL, css to ""
-		html = htmlFromURL;
-		css = cssFromURL;
-
-		// cleans html of comments
-		html = HTMLParser.clean(html);
+		/* URLs that are good for testing
+		 * "https://paulhus.math.grinnell.edu/"
+		 * "https://paulhus.math.grinnell.edu/jen2.css"
+		 *
+		 */
 		
+		/*
+		 * String representations of URLs
+		 */
+		String htmlUrl = "https://www.cs.grinnell.edu/~hamidfah/";
+		String cssUrl = "https://www.cs.grinnell.edu/~hamidfah/style_files/my_style.css";
+		String htmlFromURL = fileFromURLToString(new URL(htmlUrl));
+		String cssFromURL = fileFromURLToString(new URL(cssUrl));
+
+		/*
+		 * String representations of local files
+		 */
+		String html = fileToString(new File("./fahmidaHtml.txt"));		
+		String css = fileToString(new File("./hamidCSS.txt"));
+
+		html = HTMLParser.clean(html);
+		css = CSSParser.clean(css);
+		System.out.println("CSS\n" + css);
 		DOM dom = new HTMLParser(html).dom;
 		dom.print();
 		
-		System.out.println(css);
 		Stylesheet sheet = new CSSParser(css).sheet;
 		System.out.println(sheet);
 		
@@ -65,5 +83,5 @@ public class Main {
 		
 		new Rendering(layout, bounds.content);
 		
-	}
-}
+	} // main(String[])
+} // Class Main
