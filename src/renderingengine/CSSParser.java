@@ -1,3 +1,5 @@
+package renderingengine;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.function.Predicate;
@@ -22,7 +24,9 @@ public class CSSParser
 		consumeWhiteSpace();
 		while(!eof())
 		{
-			rules.add(parseRule());
+			Rule r = parseRule();
+			System.out.println(r);
+			rules.add(r);
 			consumeWhiteSpace();
 		}
 
@@ -80,7 +84,7 @@ public class CSSParser
 		}while(next != '{');
 
 		Collections.sort(selectors); //Sort by specificity in descending order
-
+		System.out.println("Selectors: " + selectors);
 		return selectors;
 	}
 
