@@ -1,23 +1,14 @@
-<uL><a href="https://icerm.brown.edu/events/sc-20-agntc/"> Workshop on Arithmetic Geometry, Number Theory, and Computation</a> <br>
-Project Leader<br>
-ICERM, June 1-5, 2020</ul></br>
-
-
-
-<!-- Recent Conferences and Talks <br><br>
-
-
-      
-      <Ul><a href="https://cms.math.ca/Events/winter18/schedule_session#eag" target="_blank"> CMS Winter Meeting Special Session on
-  Explicit Methods in Arithmetic Geometry</a><br>
-  Vancouver, BC <br> December 8-10, 2018
-         </UL><br>
-  <Ul><a href="https://www.simonsfoundation.org/event/simons-collaboration-on-arithmetic-geometry-number-theory-and-computation-annual-meeting-2018/" target="_blank">Simons Collaboration on Arithmetic Geometry, Number Theory, and Computation Annual Meeting</a><br>
-  New York City <br> January 10-11, 2019
-  </UL><br> -->
-
-
-<a href="previoustalks.html">Previous Years</a>
-</section>
-
-<footer> ...and finally, a cartoon from <a href="http://xkcd.com" target="_blank">xkcd.com</a> entitled "How It Works".<br><br>
+<div class="a">
+  <div class="b">
+    <div class="c">
+      <div class="d">
+        <div class="e">
+          <div class="f">
+            <div class="g">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
