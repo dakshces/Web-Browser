@@ -9,7 +9,7 @@ import java.util.Scanner;
 import java.net.*;
 
 public class Main {
-	public static void main(String[] args) throws MalformedURLException, IOException {
+	public static void main(String[] args) throws Exception {
 		Scanner sc = new Scanner(new File("./html.txt"));
 		String html = "";
 		while (sc.hasNextLine()) {
@@ -24,7 +24,7 @@ public class Main {
 		String content = null;
 		URLConnection connection = null;
 
-		connection = new URL("https://paulhus.math.grinnell.edu/").openConnection();
+		connection = new URL("https://mileti.math.grinnell.edu/").openConnection();
 		Scanner scanner = new Scanner(connection.getInputStream());
 		scanner.useDelimiter("\\Z");
 		content = scanner.next();
