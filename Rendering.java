@@ -114,9 +114,20 @@ public class Rendering
 
 	public void renderBackground(LayoutBox box)
 	{
-		Color color = getColor(box, "background");
-		if(color.exists)
-			displayList.add(new SolidColor(color,box.dim.borderBox()));
+		if(box instanceof BlockNode)
+		{
+			Color color = getColor(box, "background");
+			if(color.exists)
+				displayList.add(new SolidColor(color,box.dim.borderBox()));
+		}
+
+		else if(box instanceof InlineNode)
+		{
+			InlineNode box1 = (InlineNode) box;
+			if(box1.stynode.cont.txt != "")
+				displayList.add(new DisplayText(box1.stynode.cont.txt, box1.stynode.cont.font, box1.dim.content));
+		}
+
 	}
 
 	public void renderBorders(LayoutBox box)
