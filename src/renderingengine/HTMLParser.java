@@ -71,7 +71,7 @@ public class HTMLParser {
 			Node n = parseNode();
 			if (n != null)
 				nodes.add(n);
-			//consumeWhiteSpace();
+			//consumeWhiteSpace(); //for entitled
 		}
 		return nodes;
 	}
@@ -120,19 +120,18 @@ public class HTMLParser {
 	/**
 	 * Creates a complete Node and its corresponding children starting from currpos
 	 * 
-	 * // this checks for /br tag
-			if (input.substring(currPos, currPos + 5).compareTo("</br>") == 0) {
-				currPos += 5;
-				return new Element(new ArrayList<Node>(), "br", new HashMap<String, String>());
-			} else
+	 * // this checks for /br tag if (input.substring(currPos, currPos +
+	 * 5).compareTo("</br>
+	 * ") == 0) { currPos += 5; return new Element(new ArrayList<Node>(), "br", new
+	 * HashMap<String, String>()); } else
+	 * 
 	 * @return
 	 */
 	public Node parseNode() {
 		char c = input.charAt(currPos);
-		if (input.charAt(currPos) == '<')
-
+		if (input.charAt(currPos) == '<') {
 			return parseElement();
-		else
+		} else
 			return parseText();
 	}
 
@@ -163,14 +162,14 @@ public class HTMLParser {
 	/**
 	 * Checks if a html tag name corresponds to an html single tag
 	 * 
-	 * @param tagName
-	 * (tagName.compareTo("hr") == 0) || (tagName.compareTo("br") == 0) || (tagName.compareTo("IMG") == 0)
-				|| (tagName.compareTo("link") == 0);
+	 * @param tagName (tagName.compareTo("hr") == 0) || (tagName.compareTo("br") ==
+	 *                0) || (tagName.compareTo("IMG") == 0) ||
+	 *                (tagName.compareTo("link") == 0);
 	 * @return
 	 * 
 	 */
 	public boolean isSingleTagElement(String tagName) {
-		return  SingletonTags.contains(tagName);
+		return SingletonTags.contains(tagName);
 
 	}
 
@@ -251,6 +250,7 @@ public class HTMLParser {
 		String html = input;
 		html = html.replaceAll("\\s+", " ");
 		html = html.replaceAll("(\\s+)=(\\s+)", "=");
+		html = html.replaceAll(">(\\s+)<", "><");
 		Pattern pxPattern = Pattern.compile("(?=<!--)([\\s\\S]*?)-->");
 		Matcher pxMatcher = pxPattern.matcher(html);
 
@@ -264,9 +264,10 @@ public class HTMLParser {
 
 	public static void main(String[] args) throws Exception {
 
-		HTMLParser test = new HTMLParser(
-				"<A HREF=\"http://www.villanova.edu/artsci/mathematics/\", target=\"_blank\"> Villanova\n"
-						+ "                                 University</a>.");
+		// HTMLParser test = new HTMLParser(
+		// "<A HREF=\"http://www.villanova.edu/artsci/mathematics/\", target=\"_blank\">
+		// Villanova\n"
+		// + " University</a>.");
 		// test.dom.print();
 	}
 
