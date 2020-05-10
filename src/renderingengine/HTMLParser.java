@@ -12,20 +12,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class HTMLParser {
-	
-	static ArrayList<String> SingletonTags = new ArrayList<String>();
-	static {
-		Scanner scr;
-		try {
-			scr = new Scanner(new File("./singletontags.txt"));
-			while(scr.hasNext())
-				SingletonTags.add(scr.next());
-			scr.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 	int currPos;
 	String input;
 	DOM dom;
@@ -138,10 +124,9 @@ public class HTMLParser {
 		currPos++; // skip opening tag
 
 		String tagName = parseName();
-		tagName = tagName.toLowerCase();
 		HashMap<String, String> attributes = parseAttributes();
 		currPos++; // skip ending tag
-		// first check if tagName corresponds to a singleton tag element
+		// first check if tagName corresponds to a single tag element
 		if (isSingleTagElement(tagName)) {
 			return new Element(new ArrayList<Node>(), tagName, attributes);
 		} else {
@@ -155,11 +140,11 @@ public class HTMLParser {
 
 	/**
 	 * Checks if a html tag name corresponds to an html single tag
-	 * @param tagName, a lowercase string
+	 * @param tagName
 	 * @return
 	 */
 	public boolean isSingleTagElement(String tagName) {
-		return SingletonTags.contains(tagName);
+		return (tagName.compareTo("hr") == 0) || (tagName.compareTo("br") == 0) || (tagName.compareTo("IMG") == 0) || (tagName.compareTo("link") == 0);
 	}
 
 	/**
@@ -203,7 +188,6 @@ public class HTMLParser {
 	/**
 	 * Determines the tag name of the html tag whose
 	 * '<' is at currpos
-	 * 
 	 * @return
 	 */
 	public String parseName() {

@@ -85,19 +85,19 @@ public class Main {
 
 	public static void main(String[] args) throws Exception {
 
-		//		String html = fileToString(new File("./html.txt"));
-		
-		// default CSS
+		// = fileToString(new File("./html.txt"));
+		String html;
 		String css = fileToString(new File("./defaultblock.txt"));
 		
 		String siteURL = "https://paulhus.math.grinnell.edu/";
-		String html = fileFromURLToString(new URL(siteURL));
+		String htmlFromURL = fileFromURLToString(new URL(siteURL));
+
+		html = htmlFromURL;
+
 
 		DOM dom = new HTMLParser(html).dom;
-		dom.print();
 		ArrayList<String> StylesheetLinks = getStylesheetLinks(dom, siteURL);
 		css = CompleteCSSString(css, StylesheetLinks);
-		
 		Stylesheet sheet = new CSSParser(css).sheet;
 		// System.out.println(sheet);
 
