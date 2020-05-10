@@ -90,12 +90,13 @@ public class Main {
 		String css = fileToString(new File("./defaultblock.txt"));
 		
 		String siteURL = "https://paulhus.math.grinnell.edu/";
+	
 		String htmlFromURL = fileFromURLToString(new URL(siteURL));
 
 		html = htmlFromURL;
 
-
 		DOM dom = new HTMLParser(html).dom;
+		dom.print();
 		ArrayList<String> StylesheetLinks = getStylesheetLinks(dom, siteURL);
 		css = CompleteCSSString(css, StylesheetLinks);
 		Stylesheet sheet = new CSSParser(css).sheet;

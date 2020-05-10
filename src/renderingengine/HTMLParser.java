@@ -16,8 +16,23 @@ public class HTMLParser {
 	String input;
 	DOM dom;
 
+	static ArrayList<String> SingletonTags = new ArrayList<String>();
+	static {
+		Scanner scr;
+		try {
+			scr = new Scanner(new File("./singletontags.txt"));
+			while (scr.hasNext())
+				SingletonTags.add(scr.next());
+			scr.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * Constructor
+	 * 
 	 * @param input, a string representation of html
 	 * @throws Exception
 	 */
@@ -31,10 +46,11 @@ public class HTMLParser {
 
 	/**
 	 * Creates a DOM object tree of the html string input
+	 * 
 	 * @return
 	 * @throws Exception
 	 */
-	public DOM parse() throws Exception{
+	public DOM parse() throws Exception {
 		ArrayList<Node> nodes = parseNodes();
 		if (nodes.size() == 0)
 			throw new Exception("DOM is empty");
@@ -45,6 +61,7 @@ public class HTMLParser {
 
 	/**
 	 * Creates an array implementation of the DOM tree
+	 * 
 	 * @return an array implementation of a tree
 	 */
 	public ArrayList<Node> parseNodes() {
@@ -54,13 +71,14 @@ public class HTMLParser {
 			Node n = parseNode();
 			if (n != null)
 				nodes.add(n);
-			consumeWhiteSpace();
+			//consumeWhiteSpace();
 		}
 		return nodes;
 	}
 
 	/**
 	 * Checks if our parser has reached the end of the html string.
+	 * 
 	 * @return
 	 */
 	public boolean eof() {
@@ -77,11 +95,12 @@ public class HTMLParser {
 	}
 
 	/**
-	 * Creates a substring starting with the char at currpos of the String input
-	 * to up until the char fails to satisfy charTest
+	 * Creates a substring starting with the char at currpos of the String input to
+	 * up until the char fails to satisfy charTest
+	 * 
 	 * @param charTest, a Predicate
-	 * @return the first substring starting from currpos consisting only of characters 
-	 * satisfying the Predicate charTest
+	 * @return the first substring starting from currpos consisting only of
+	 *         characters satisfying the Predicate charTest
 	 */
 	public String consumeWhile(Predicate<Character> charTest) {
 		String res = "";
@@ -100,30 +119,33 @@ public class HTMLParser {
 
 	/**
 	 * Creates a complete Node and its corresponding children starting from currpos
+	 * 
+	 * // this checks for /br tag
+			if (input.substring(currPos, currPos + 5).compareTo("</br>") == 0) {
+				currPos += 5;
+				return new Element(new ArrayList<Node>(), "br", new HashMap<String, String>());
+			} else
 	 * @return
 	 */
 	public Node parseNode() {
 		char c = input.charAt(currPos);
 		if (input.charAt(currPos) == '<')
 
-			// this checks for /br tag
-			if (input.substring(currPos, currPos + 5).compareTo("</br>") == 0) {
-				currPos += 5;
-				return new Element(new ArrayList<Node>(), "br", new HashMap<String, String>());
-			} else
-				return parseElement();
+			return parseElement();
 		else
 			return parseText();
 	}
 
 	/**
 	 * Creates an Element Node along with its corresponding children
+	 * 
 	 * @return
 	 */
 	public Element parseElement() {
 		currPos++; // skip opening tag
 
 		String tagName = parseName();
+		consumeWhiteSpace();
 		HashMap<String, String> attributes = parseAttributes();
 		currPos++; // skip ending tag
 		// first check if tagName corresponds to a single tag element
@@ -140,15 +162,21 @@ public class HTMLParser {
 
 	/**
 	 * Checks if a html tag name corresponds to an html single tag
+	 * 
 	 * @param tagName
+	 * (tagName.compareTo("hr") == 0) || (tagName.compareTo("br") == 0) || (tagName.compareTo("IMG") == 0)
+				|| (tagName.compareTo("link") == 0);
 	 * @return
+	 * 
 	 */
 	public boolean isSingleTagElement(String tagName) {
-		return (tagName.compareTo("hr") == 0) || (tagName.compareTo("br") == 0) || (tagName.compareTo("IMG") == 0) || (tagName.compareTo("link") == 0);
+		return  SingletonTags.contains(tagName);
+
 	}
 
 	/**
 	 * Retrieves the attributes of an html tag found in its opening tag
+	 * 
 	 * @return
 	 */
 	public HashMap<String, String> parseAttributes() {
@@ -158,8 +186,8 @@ public class HTMLParser {
 			consumeWhiteSpace();
 			String attrName = parseName();
 			consumeWhiteSpace();
-			currPos++;
-			consumeWhiteSpace();
+			currPos++; // skip =
+			// consumeWhiteSpace();
 			String value = parseAttrValue();
 			currPos++;
 			consumeWhiteSpace();
@@ -171,6 +199,7 @@ public class HTMLParser {
 
 	/**
 	 * Constructs a Text Node
+	 * 
 	 * @return
 	 */
 	public Text parseText() {
@@ -178,16 +207,16 @@ public class HTMLParser {
 	}
 
 	/**
-	 * Changes currpos to the index of the next non-whitespace character.
-	 * currpos is unchanged if input.charAt(currpos) is not a whitespace character.
+	 * Changes currpos to the index of the next non-whitespace character. currpos is
+	 * unchanged if input.charAt(currpos) is not a whitespace character.
 	 */
 	public void consumeWhiteSpace() {
 		consumeWhile(c -> Character.isWhitespace(c));
 	}
 
 	/**
-	 * Determines the tag name of the html tag whose
-	 * '<' is at currpos
+	 * Determines the tag name of the html tag whose '<' is at currpos
+	 * 
 	 * @return
 	 */
 	public String parseName() {
@@ -196,6 +225,7 @@ public class HTMLParser {
 
 	/**
 	 * Retrieves the attributes of the html tag
+	 * 
 	 * @return
 	 */
 	public String parseAttrValue() {
@@ -209,16 +239,17 @@ public class HTMLParser {
 
 	}
 
-	
 	/**
-	 * Removes the comments from an html string
-	 * Source : https://stackoverflow.com/questions/1084741/regexp-to-strip-html-comments
+	 * Removes the comments from an html string Source :
+	 * https://stackoverflow.com/questions/1084741/regexp-to-strip-html-comments
+	 * 
 	 * @param html
 	 * @return
 	 */
 	public void clean() {
 
 		String html = input;
+		html = html.replaceAll("\\s+", " ");
 		Pattern pxPattern = Pattern.compile("(?=<!--)([\\s\\S]*?)-->");
 		Matcher pxMatcher = pxPattern.matcher(html);
 
@@ -229,16 +260,13 @@ public class HTMLParser {
 
 		input = html;
 	}
-	
+
 	public static void main(String[] args) throws Exception {
-		new HTMLParser("<html>\n" + "    <body>\n" + "        <h1>Title</h1>\n"
-				+ "        <div id=\"main\" class=\"test\">\n" + "            <p>Hello <em>world</em>!</p>\n"
-				+ "        </div>\n" + "    </body>\n" + "</html>");
 
-		new HTMLParser("<html>\n" + "<body>\n" + "\n" + "<h1>My First Heading</h1>\n" + "\n"
-				+ "<p>My first paragraph.</p>\n" + "\n" + "</body>\n" + "</html>\n" + "\n" + "");
-		
-
+		HTMLParser test = new HTMLParser(
+				"<A HREF=\"http://www.villanova.edu/artsci/mathematics/\", target=\"_blank\"> Villanova\n"
+						+ "                                 University</a>.");
+		// test.dom.print();
 	}
 
 } // HTMLParser
