@@ -250,6 +250,7 @@ public class HTMLParser {
 
 		String html = input;
 		html = html.replaceAll("\\s+", " ");
+		html = html.replaceAll("(\\s+)=(\\s+)", " = ");
 		Pattern pxPattern = Pattern.compile("(?=<!--)([\\s\\S]*?)-->");
 		Matcher pxMatcher = pxPattern.matcher(html);
 
