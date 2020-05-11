@@ -58,6 +58,11 @@ class Selector implements Comparable<Selector>
 		spec = new Specificity(0,0,0);
 	}
 	
+	public Specificity getSpec()
+	{
+		return this.spec;
+	}
+	
 	public int compareTo(Selector obj)
 	{
 		if(obj.spec.a != this.spec.a)
@@ -88,19 +93,31 @@ class SimpleSelector extends Selector
 	public void setTagName(String name)
 	{
 		tagName = name;
-		spec.c++;
+		//spec.c++;
 	}
 	
 	public void setId(String id)
 	{
 		this.id = id;
-		spec.a++;
+		//spec.a++;
 	}
 	
 	public void addClass(String clas)
 	{
 		classes.add(clas);
-		spec.b++;
+		//spec.b++;
+	}
+	
+	public Specificity getSpec()
+	{
+		if(tagName != "")
+			spec.c = 1;
+		if(id != "")
+			spec.a = 1;
+		
+		spec.c = classes.size();
+		
+		return spec;
 	}
 	
 	@Override
@@ -121,6 +138,18 @@ class DescendantSelector extends Selector
 		chain = new ArrayList<SimpleSelector>();
 	}
 	
+	public Specificity getSpec()
+	{
+		this.spec = new Specificity(0,0,0);
+		
+		for(SimpleSelector sel: chain)
+		{
+			Specificity part = sel.getSpec();
+			this.spec.add(part);
+		}
+		
+		return this.spec;
+	}
 	
 }
 
@@ -259,6 +288,13 @@ class Specificity
 		this.a = a;
 		this.b = b;
 		this.c = c;
+	}
+	
+	public void add(Specificity obj)
+	{
+		this.a += obj.a;
+		this.b += obj.b;
+		this.c += obj.c;
 	}
 
 }

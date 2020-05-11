@@ -11,13 +11,15 @@ public class LayoutBox
 	ArrayList<LayoutBox> children;
 	int currInlinePosX;
 	int currInlinePosY;
+	//boolean startedInline;
 
 	public LayoutBox()
 	{
 		dim = new Dimensions();
 		children = new ArrayList<LayoutBox>();
-		currInlinePosX = 0;
+		currInlinePosX = (int) dim.content.width;
 		currInlinePosY = 0;
+		//startedInline = false;
 	}
 
 	public LayoutBox getInlineContainer()
@@ -38,8 +40,7 @@ public class LayoutBox
 
 	public void layout(Dimensions container, int currInlinePosX, int currInlinePosY)
 	{
-		this.currInlinePosX = currInlinePosX;
-		this.currInlinePosY = currInlinePosY;
+		
 		if(this instanceof BlockNode)
 		{
 			BlockNode curr = (BlockNode) this;
@@ -49,12 +50,16 @@ public class LayoutBox
 
 		else if(this instanceof InlineNode)
 		{
+			this.currInlinePosX = currInlinePosX;
+			this.currInlinePosY = currInlinePosY;
 			InlineNode curr = (InlineNode) this;
 			curr.layoutBlock(container, currInlinePosX, currInlinePosY);
 		}
 
 		else
 		{
+			this.currInlinePosX = currInlinePosX;
+			this.currInlinePosY = currInlinePosY;
 			AnonymousBlock curr = (AnonymousBlock) this;
 			curr.layoutBlock(container,currInlinePosX, currInlinePosY);
 		}
@@ -85,9 +90,9 @@ public class LayoutBox
 			{
 				AnonymousBlock c = (AnonymousBlock) child;
 				c.layoutBlock(dim,currInlinePosX,currInlinePosY);
-				dim.content.height += c.updateY - currInlinePosY;
-				currInlinePosX = c.updateX;
-				currInlinePosY = c.updateY;
+				dim.content.height += c.currInlinePosY - currInlinePosY;
+				currInlinePosX = c.currInlinePosX;
+				currInlinePosY = c.currInlinePosY;
 				//dim.content.height += child.dim.marginBox().height;
 			}
 
@@ -95,6 +100,8 @@ public class LayoutBox
 			{
 				child.layout(dim,currInlinePosX, currInlinePosY);
 				dim.content.height += child.dim.marginBox().height;
+				currInlinePosX  =  (int) dim.content.width;
+				currInlinePosY  += child.dim.marginBox().height;
 			}
 
 			double height = dim.content.height;
@@ -125,6 +132,8 @@ class BlockNode extends LayoutBox
 	{
 		calculateWidth(container);
 		calculateBlockPosition(container);
+		this.currInlinePosX = (int) dim.content.width;
+		this.currInlinePosY = 0;
 		layoutBlockChildren();
 		calculateBlockHeight();
 	}
@@ -277,21 +286,29 @@ class InlineNode extends LayoutBox
 		if(stynode.cont.txt != "")
 		{
 			String txt = stynode.cont.txt;
-			dim.content.x = container.content.x + currInlinePosX;
-			dim.content.y = container.content.y + currInlinePosY;
 			java.awt.Canvas c = new java.awt.Canvas();
 			FontMetrics metrics = c.getFontMetrics(stynode.cont.font);
+			dim.content.height =  metrics.getHeight();
+			if(currInlinePosX == container.content.width)
+			{
+				currInlinePosX = 0;
+				currInlinePosY += dim.content.height;
+			}
+			dim.content.x = container.content.x + currInlinePosX;
+			dim.content.y = container.content.y + currInlinePosY;
 			
-			while(txt.contains("BREAKLIEN"))
+			int spaceWidth = metrics.charWidth(' ');
+//			int tempX = currInlinePosX;
+			if(txt.contains("BREAKLIEN"))
 			{
 				int index = txt.indexOf("BREAKLIEN");
 				int w = metrics.stringWidth(txt.substring(0,index));
-				int space = metrics.charWidth(' ');
-				txt = txt.substring(0,index) + String.format("%1$" + (container.content.width- currInlinePosX+w)/space + "s",txt.substring(index+9));
+				int spaces = (int) (container.content.width- currInlinePosX-w)/spaceWidth;
+				txt = txt.substring(0,index) + makeSpaces(spaces)+ "<DELETE>" + txt.substring(index+9);
+				stynode.cont.txt = txt;
+				//txt = txt.substring(0,index) + String.format("%1$" + (container.content.width- currInlinePosX+w)/space + "s",txt.substring(index+9));
 			}
-			stynode.cont.txt = txt;
 			int width = metrics.stringWidth(txt);
-			dim.content.height =  metrics.getHeight();
 			double overflow = currInlinePosX + width - container.content.width;
 			if(overflow > 0)
 			{
@@ -304,24 +321,34 @@ class InlineNode extends LayoutBox
 					prev.stynode.cont.txt = txt.substring(0,cutoff);
 					InlineNode split = new InlineNode();
 					split.stynode = prev.stynode.copy();
-					split.stynode.cont.txt = txt.substring(cutoff);
+					split.stynode.cont.txt = txt.substring(cutoff).replaceAll("\\s*<DELETE>", "");
 					split.dim.content.x = container.content.x + 0;
 					split.dim.content.y = container.content.y + currInlinePosY + prev.dim.content.height;
 					split.dim.content.height = prev.dim.content.height;
 					prev.dim.content.width = metrics.stringWidth(prev.stynode.cont.txt);
+					
+					currInlinePosX = 0;
+					
+					txt = split.stynode.cont.txt;
+					if(txt.contains("BREAKLIEN"))
+					{
+						int index = txt.indexOf("BREAKLIEN");
+						int w = metrics.stringWidth(txt.substring(0,index));
+						int spaces = (int) (container.content.width- currInlinePosX-w)/spaceWidth;
+						txt = txt.substring(0,index) + makeSpaces(spaces) + "<DELETE>" + txt.substring(index+9);
+						split.stynode.cont.txt = txt;
+						//txt = txt.substring(0,index) + String.format("%1$" + (container.content.width- currInlinePosX+w)/space + "s",txt.substring(index+9));
+					}
 					split.dim.content.width = metrics.stringWidth(split.stynode.cont.txt);
 					updateX = (int) split.dim.content.width;
 					updateY = (int) (currInlinePosY + prev.dim.content.height);
-					currInlinePosX = 0;
 					currInlinePosY = updateY;
 					width = (int) split.dim.content.width;
 					overflow = currInlinePosX + width - container.content.width;
 					splits.add(split);
-					txt = split.stynode.cont.txt;
 					prev = split;
 					
 				}
-				
 				return splits;
 			}
 			else
@@ -346,6 +373,16 @@ class InlineNode extends LayoutBox
 		}
 		return null;
 	}
+	
+	public String makeSpaces(int spaces)
+	{
+		String str = "";
+		for(int i = 0; i<spaces; i++)
+		{
+			str += ' ';
+		}
+		return str;
+	}
 
 }
 
@@ -356,6 +393,7 @@ class AnonymousBlock extends LayoutBox
 	
 	public AnonymousBlock()
 	{
+		super();
 		updateX = 0;
 		updateY = 0;
 	}
@@ -373,8 +411,8 @@ class AnonymousBlock extends LayoutBox
 		dim.content.y =  container.content.y;
 		dim.content.width = container.content.width;//?
 		layoutBlockChildren();
-		updateX = this.currInlinePosX;
-		updateY = this.currInlinePosY;
+		//updateX = this.currInlinePosX;
+		//updateY = this.currInlinePosY;
 	}
 }
 

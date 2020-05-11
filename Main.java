@@ -43,7 +43,7 @@ public class Main {
 								href = href.replaceAll("[\"]", "");
 								type = type.replaceAll("[\"]", "");
 								if (rel != null & href != null & type != null) {
-									if (type.compareTo("text/css")==0 & rel.compareTo("stylesheet")==0){
+									if (type.compareTo("text/css")==0 && rel.compareTo("stylesheet")==0){
 										// we expect href to be of form "directories/nameOfFile.css"
 										StylesheetLinks.add(URL + href);
 									}
@@ -78,7 +78,7 @@ public class Main {
 	public static String CompleteCSSString(String css, ArrayList<String> StylesheetLinks) throws Exception{
 		String completeCSS = css;
 		for (String url : StylesheetLinks) {
-			completeCSS = fileFromURLToString(new URL(url)) + "\n" + completeCSS;
+			completeCSS =  completeCSS + "\n" + fileFromURLToString(new URL(url));
 		}
 		return completeCSS;
 	}
@@ -89,7 +89,7 @@ public class Main {
 		String html;
 		String css = fileToString(new File("./defaultblock.txt"));
 		
-		String siteURL = "https://paulhus.math.grinnell.edu/";
+		String siteURL =  "https://paulhus.math.grinnell.edu/"; //"https://paulhus.math.grinnell.edu/teaching.html"
 	
 		String htmlFromURL = fileFromURLToString(new URL(siteURL));
 
@@ -98,6 +98,8 @@ public class Main {
 		DOM dom = new HTMLParser(html).dom;
 		dom.print();
 		ArrayList<String> StylesheetLinks = getStylesheetLinks(dom, siteURL);
+		//ArrayList<String> StylesheetLinks = new ArrayList<String>();
+		//StylesheetLinks.add("https://paulhus.math.grinnell.edu/jen2.css");
 		css = CompleteCSSString(css, StylesheetLinks);
 		Stylesheet sheet = new CSSParser(css).sheet;
 		// System.out.println(sheet);

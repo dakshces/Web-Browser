@@ -1,10 +1,10 @@
 package renderingengine;
 
+
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Map.Entry;
 
 public class StyleTree
@@ -40,7 +40,11 @@ public class StyleTree
 
 
 		for(Node child: n.children)
-			sn.children.add(StyleNode(child,sn,sheet,ancestors));
+			{
+				int last = ancestors.size();
+				sn.children.add(StyleNode(child,sn,sheet,ancestors));
+				ancestors.subList(last, ancestors.size()).clear();
+			}
 
 		return sn;
 	}
@@ -285,7 +289,7 @@ public class StyleTree
 			{
 				if(matches(el, selector, ancestors))
 				{
-					match.add(new MatchedRule(rule,selector.spec));
+					match.add(new MatchedRule(rule,selector.getSpec()));
 					break;
 				}
 			}

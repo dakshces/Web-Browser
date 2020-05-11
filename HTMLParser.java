@@ -71,7 +71,8 @@ public class HTMLParser {
 			Node n = parseNode();
 			if (n != null)
 				nodes.add(n);
-			consumeWhiteSpace();
+				consumeWhiteSpace();
+
 		}
 		return nodes;
 	}
@@ -117,6 +118,19 @@ public class HTMLParser {
 		return res;
 	}
 
+	public int advanceWhile(Predicate<Character> charTest)
+	{
+		int i = 0;
+		while(currPos + i < input.length() && charTest.test((Character) (input.charAt(currPos+i))))
+		{
+			i++;
+		}
+		if(currPos + i >= input.length())
+			return 0;
+		return i;
+	}
+
+
 	/**
 	 * Creates a complete Node and its corresponding children starting from currpos
 	 * 
@@ -130,7 +144,9 @@ public class HTMLParser {
 	public Node parseNode() {
 		char c = input.charAt(currPos);
 		if (input.charAt(currPos) == '<')
+		{
 			return parseElement();
+		}
 		else
 			return parseText();
 	}
@@ -260,8 +276,12 @@ public class HTMLParser {
 			html = html.replace(htmlString, "");
 		}
 
-		input = html.replaceAll("<br>", "BREAKLIEN");
-	//	input = html;
+		input = html.replaceAll("\\s*<br>\\s*", "BREAKLIEN"); //purposely spelt wrong to avoid collision with content
+		//input = html.replaceAll("<head>.*</head>", "");
+		if(!input.contains("<html>"))
+			input = "<html>" + input;
+		if(!input.contains("</html>"))
+			input += "</html>";
 	}
 
 	public static void main(String[] args) throws Exception {
