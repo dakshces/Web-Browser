@@ -71,7 +71,7 @@ public class HTMLParser {
 			Node n = parseNode();
 			if (n != null)
 				nodes.add(n);
-				consumeWhiteSpace();
+				//consumeWhiteSpace();
 
 		}
 		return nodes;
@@ -264,10 +264,11 @@ public class HTMLParser {
 	 * @return
 	 */
 	public void clean() {
-
+		
 		String html = input;
 		html = html.replaceAll("\\s+", " ");
 		html = html.replaceAll("(\\s+)=(\\s+)", "=");
+		html = html.replaceAll(">(\\s+)<", "><");
 		Pattern pxPattern = Pattern.compile("(?=<!--)([\\s\\S]*?)-->");
 		Matcher pxMatcher = pxPattern.matcher(html);
 
@@ -275,6 +276,7 @@ public class HTMLParser {
 			String htmlString = pxMatcher.group();
 			html = html.replace(htmlString, "");
 		}
+
 
 		input = html.replaceAll("\\s*<br>\\s*", "BREAKLIEN"); //purposely spelt wrong to avoid collision with content
 		//input = html.replaceAll("<head>.*</head>", "");
