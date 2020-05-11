@@ -2,28 +2,28 @@ package renderingengine;
 
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
-public class Rendering
-{
+public class Rendering {
 	ArrayList<DisplayCommand> displayList;
 	int height;
 	int width;
 
-	public Rendering(LayoutTree layout, Rect bounds)
-	{
+	public Rendering(LayoutTree layout, Rect bounds) {
 		displayList = new ArrayList<DisplayCommand>();
 		height = (int) bounds.height;
 		width = (int) bounds.width;
 		renderLayoutBox(layout.root);
 		paint();
 	}
-
 
 	public void paint()
 	{
@@ -41,6 +41,14 @@ public class Rendering
 				Color c = item.color;
 				output.setColor(new java.awt.Color(c.r, c.g, c.b));
 				output.fillRect((int)item.rect.x, (int)item.rect.y, (int)item.rect.width, (int)item.rect.height);
+			}
+			
+			else if (item0 instanceof DisplayImage) {
+				DisplayImage item = (DisplayImage) item0;
+				//output.setColor(java.awt.Color.RED);
+				output.drawImage(item.image,
+						(int)item.rect.x,(int)item.rect.y,
+		                   null);
 			}
 
 			else
@@ -71,107 +79,132 @@ public class Rendering
 			e.printStackTrace();
 		}
 	}
-	
-	public void renderLayoutBox(LayoutBox box)
-	{
+
+	public void renderLayoutBox(LayoutBox box) {
 		renderBackground(box);
 		renderBorders(box);
 
-		for(LayoutBox child: box.children)
-		{
+		for (LayoutBox child : box.children) {
 			renderLayoutBox(child);
 		}
 	}
 
-	public void renderBackground(LayoutBox box)
-	{
+	public void renderBackground(LayoutBox box) {
 		Color color = getColor(box, "background-color");
-		if(color.exists)
-		{
-			displayList.add(new SolidColor(color,box.dim.borderBox()));
+		if (color.exists) {
+			displayList.add(new SolidColor(color, box.dim.borderBox()));
 		}
 
-		else if(box instanceof InlineNode)
-		{
+		else if (box instanceof InlineNode) {
 			InlineNode box1 = (InlineNode) box;
-			if(box1.stynode.cont.txt != "")
-				displayList.add(new DisplayText(box1.stynode.cont.txt, box1.stynode.cont.font, box1.dim.content,getColor(box,"color")));
+			
+			if (box1.stynode.tagName.compareTo("img") == 0) {
+				//System.out.println("found img");
+				//System.out.println(box1.stynode.specifiedVals);
+				String src = box1.stynode.attributes.get("src");
+				src = "https://paulhus.math.grinnell.edu/" + src.replaceAll("\"", "");
+				String width = box1.stynode.attributes.get("width").replaceAll("\"","");
+				String height = box1.stynode.attributes.get("height").replaceAll("\"", "");
+				double widthD = Double.parseDouble(width);
+				double heightD = Double.parseDouble(height);
+				//System.out.println(src);
+				//Rect rect = new Rect(box1.dim.content.x, box1.dim.content.y, Double.parseDouble(width), Double.parseDouble(height) );
+				Image image = null;
+				URL url;
+				try {
+					url = new URL(src);
+					image = ImageIO.read(url);
+					displayList.add(new DisplayImage(image.getScaledInstance((int) widthD, (int) heightD, Image.SCALE_DEFAULT), box1.dim.content));
+				} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} 
+			
+			else if (box1.stynode.cont.txt != "")
+				displayList.add(new DisplayText(box1.stynode.cont.txt, box1.stynode.cont.font, box1.dim.content,
+						getColor(box, "color")));
 		}
 
 	}
 
-	public void renderBorders(LayoutBox box)
-	{
+	public void renderBorders(LayoutBox box) {
 		Color color = getColor(box, "border-color");
-		if(!color.exists)
+		if (!color.exists)
 			return;
 
 		Rect bBox = box.dim.borderBox();
-		//Left border box (x,y,height,width)
-		displayList.add(new SolidColor(color, new Rect(bBox.x,bBox.y,bBox.height,box.dim.border.left)));
-		//Right border box
-		displayList.add(new SolidColor(color, new Rect(bBox.x+bBox.width-box.dim.border.right,bBox.y,bBox.height,box.dim.border.right)));
-		//Top border box
-		displayList.add(new SolidColor(color, new Rect(bBox.x,bBox.y,box.dim.border.top,bBox.width)));
-		//Bottom border box
-		displayList.add(new SolidColor(color, new Rect(bBox.x,bBox.y+bBox.height-box.dim.border.bottom,box.dim.border.bottom,bBox.width)));
-
+		// Left border box (x,y,height,width)
+		displayList.add(new SolidColor(color, new Rect(bBox.x, bBox.y, bBox.height, box.dim.border.left)));
+		// Right border box
+		displayList.add(new SolidColor(color,
+				new Rect(bBox.x + bBox.width - box.dim.border.right, bBox.y, bBox.height, box.dim.border.right)));
+		// Top border box
+		displayList.add(new SolidColor(color, new Rect(bBox.x, bBox.y, box.dim.border.top, bBox.width)));
+		// Bottom border box
+		displayList.add(new SolidColor(color,
+				new Rect(bBox.x, bBox.y + bBox.height - box.dim.border.bottom, box.dim.border.bottom, bBox.width)));
 
 	}
 
-	//Returns white if no color specified
-	public Color getColor(LayoutBox box, String property)
-	{
+	// Returns white if no color specified
+	public Color getColor(LayoutBox box, String property) {
 		Value val = null;
-		if(box instanceof BlockNode)
-		{
+		if (box instanceof BlockNode) {
 			BlockNode box1 = (BlockNode) box;
-			val =  box1.stynode.getValue(property);
+			val = box1.stynode.getValue(property);
 		}
 
-		else if(box instanceof InlineNode)
-		{
+		else if (box instanceof InlineNode) {
 			InlineNode box1 = (InlineNode) box;
 			val = box1.stynode.getValue(property);
 		}
 
-		Color color = val instanceof Color? (Color) val: new Color(false);
+		Color color = val instanceof Color ? (Color) val : new Color(false);
 		return color;
 	}
 
-
 }
 
-class DisplayCommand
-{}
+class DisplayCommand {
+}
 
-class SolidColor extends DisplayCommand
-{
+class SolidColor extends DisplayCommand {
 	Color color;
 	Rect rect;
 
-	public SolidColor(Color color, Rect rect) 
-	{
+	public SolidColor(Color color, Rect rect) {
 		this.color = color;
 		this.rect = rect;
 	}
 }
 
-class DisplayText extends DisplayCommand
-{
+class DisplayImage extends DisplayCommand {
+	Image image;
+	Rect rect;
+
+	public DisplayImage(Image image, Rect rect) {
+		this.image = image;
+		this.rect = rect;
+	}
+}
+
+class DisplayText extends DisplayCommand {
 	String text;
 	Font font;
-	Rect rect; 
+	Rect rect;
 	Color color;
 
-	public DisplayText(String text, Font font, Rect rect, Color color) 
-	{
+	public DisplayText(String text, Font font, Rect rect, Color color) {
 		this.text = text;
 		this.font = font;
 		this.rect = rect;
-		if(color.exists)
+		if (color.exists)
 			this.color = color;
 		else
-			this.color = new Color(0,0,0,255); //black for text
+			this.color = new Color(0, 0, 0, 255); // black for text
 	}
 }

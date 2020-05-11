@@ -25,6 +25,7 @@ public class StyleTree
 		if(n instanceof Element)
 		{	
 			sn.tagName = ((Element) n).tagName;
+			sn.attributes = ((Element) n).attributes;
 			sn.specifiedVals = matchingRules((Element) n, sheet,ancestors);
 			sn = modifyIfPhraseTag(sn);
 			ancestors.add((Element) n);
@@ -311,6 +312,8 @@ public class StyleTree
 class StyledNode extends Node
 {
 	HashMap<String, Value> specifiedVals;
+	HashMap<String, String> attributes;
+
 	Text cont;
 	String tagName;
 
