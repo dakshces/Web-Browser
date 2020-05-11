@@ -160,8 +160,10 @@ public class HTMLParser {
 		currPos++; // skip opening tag
 
 		String tagName = parseName();
+		tagName = tagName.toLowerCase();
 		consumeWhiteSpace();
 		HashMap<String, String> attributes = parseAttributes();
+		
 		currPos++; // skip ending tag
 		// first check if tagName corresponds to a single tag element
 		if (isSingleTagElement(tagName)) {
@@ -200,6 +202,7 @@ public class HTMLParser {
 		while (curr != '>') {
 			consumeWhiteSpace();
 			String attrName = parseName();
+			attrName = attrName.toLowerCase();
 			consumeWhiteSpace();
 			currPos++; // skip =
 			consumeWhiteSpace();

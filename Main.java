@@ -94,9 +94,9 @@ public class Main {
 		String htmlFromURL = fileFromURLToString(new URL(siteURL));
 
 		html = htmlFromURL;
-
+		//html = fileToString(new File("./jenpage.txt"));
 		DOM dom = new HTMLParser(html).dom;
-		dom.print();
+		//dom.print();
 		ArrayList<String> StylesheetLinks = getStylesheetLinks(dom, siteURL);
 		//ArrayList<String> StylesheetLinks = new ArrayList<String>();
 		//StylesheetLinks.add("https://paulhus.math.grinnell.edu/jen2.css");
