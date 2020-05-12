@@ -280,6 +280,7 @@ class DisplayText extends DisplayCommand {
 	
 	/**
 	 * Constructs a {@code DisplayText} out of the specified string, font, rect, and color objects.
+	 *
 	 * @param text a string that represents the text to be displayed.
 	 * @param font a {@code Font} that represents the font in which text will be displayed.
 	 * @param rect a {@code Rect}.
