@@ -13,18 +13,36 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 public class Rendering {
+	// +--------+--------------------------------------------------------------------------
+	// | Fields |
+	// +--------+
 	ArrayList<DisplayCommand> displayList;
 	int height;
 	int width;
 
+	// +--------------+----------------------------------------------
+	// | Constructors |
+	// +--------------+
+	
+	/**
+	 * Constructs a {@code Rendering} using the specified layouttree and rect. 
+	 * {@code this} can generate a graphic of the specified layouttree with the width
+	 * of the graphic being {@code bounds.width}.
+	 * 
+	 * @param layout a {@code LayoutTree}.
+	 * @param bounds a {@code Rect}.
+	 */
 	public Rendering(LayoutTree layout, Rect bounds) {
 		displayList = new ArrayList<DisplayCommand>();
 		height = (int) bounds.height;
 		width = (int) bounds.width;
 		renderLayoutBox(layout.root);
 		paint();
-	}
-
+	} // Rendering(LayoutTree, Rect)
+	
+	// +---------+--------------------------------------------
+	// | Methods |
+	// +---------+
 	public void paint()
 	{
 		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -167,44 +185,111 @@ public class Rendering {
 		return color;
 	}
 
-}
+} // class Rendering
 
+/**
+ * {@code DisplayCommand} represents objects that will be used
+ * by a {@code Rendering} object to generate a graphic.
+ */
 class DisplayCommand {
-}
+	// +--------+--------------------------------------------------------
+	// | Fields |
+	// +--------+	
+	Rect rect;
+	
+	// +-------------+----------------------------------------------------
+	// | Constructor |
+	// +-------------+
+	
+	/**
+	 * Constructs a {@code DisplayCommand} out of the specified rect object.
+	 * @param rect a {@code Rect}.
+	 */
+	public DisplayCommand(Rect rect) {
+		this.rect = rect;
+	} // DisplayCommand(Rect)
+} // class DisplayCommand
 
+/**
+ * {@code SolidColor} represents a block of solid color
+ * that can be generated in the paint() function of a {@code Rendering} object.
+ */
 class SolidColor extends DisplayCommand {
+	// +--------+--------------------------------------------------------
+	// | Fields |
+	// +--------+	
 	Color color;
-	Rect rect;
-
+	
+	// +-------------+----------------------------------------------------
+	// | Constructor |
+	// +-------------+
+	
+	/**
+	 * Constructs a {@code SolidColor} out of the specified color and rect objects.
+	 * @param color a {@code Color}.
+	 * @param rect a {@code Rect}.
+	 */
 	public SolidColor(Color color, Rect rect) {
+		super(rect);
 		this.color = color;
-		this.rect = rect;
-	}
-}
+	} // SolidColor(Color, Rect)
+} // class SolidColor
 
+/**
+ * {@code DisplayImage} represents an image
+ * that can be generated in the paint() function of a {@code Rendering} object.
+ */
 class DisplayImage extends DisplayCommand {
+	
+	// +--------+--------------------------------------------------------
+	// | Fields |
+	// +--------+	
 	Image image;
-	Rect rect;
 
+	// +-------------+----------------------------------------------------
+	// | Constructor |
+	// +-------------+
+	
+	/**
+	 * Constructs a {@code DisplayImage} out of the specified image and rect objects.
+	 * @param image
+	 * @param rect
+	 */
 	public DisplayImage(Image image, Rect rect) {
+		super(rect);
 		this.image = image;
-		this.rect = rect;
-	}
-}
+	} // Display(Image, Rect)
+} // class DisplayImage
 
+/**
+ * {@code DisplayText} represents text
+ * that can be generated in the paint() function of a {@code Rendering} object.
+ */
 class DisplayText extends DisplayCommand {
+	
+	// +--------+--------------------------------------------------------
+	// | Fields |
+	// +--------+
 	String text;
 	Font font;
-	Rect rect;
 	Color color;
 
+	// +-------------+----------------------------------------------------
+	// | Constructor |
+	// +-------------+
+	
+	/**
+	 * Constructs a {@code DisplayText} out of the specified string, font, rect, and color objects.
+	 * @param text a string that represents the text to be displayed.
+	 * @param font a {@code Font} that represents the font in which text will be displayed.
+	 * @param rect a {@code Rect}.
+	 * @param color a {@code Color} that represents the color in which text will be displayed.
+	 */
 	public DisplayText(String text, Font font, Rect rect, Color color) {
+		super(rect);
 		this.text = text;
 		this.font = font;
-		this.rect = rect;
-		if (color.exists)
-			this.color = color;
-		else
-			this.color = new Color(0, 0, 0, 255); // black for text
-	}
-}
+		this.color = (color.exists) ? color : new Color(0, 0, 0, 255); // black for text
+		
+	} // DisplayText(String, Font, Rect, Color)
+} // class DisplayText
