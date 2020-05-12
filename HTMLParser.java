@@ -12,6 +12,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class HTMLParser {
+	
+	// +-------+------------------------------------------------------------
+	// | Field |
+	// +-------+
+	
 	int currPos;
 	String input;
 	DOM dom;
@@ -29,6 +34,10 @@ public class HTMLParser {
 			e.printStackTrace();
 		}
 	}
+	
+	// +--------------+-------------------------------------------
+	// | Constructors |
+	// +--------------+
 
 	/**
 	 * Constructor
@@ -42,8 +51,12 @@ public class HTMLParser {
 		clean();
 		this.dom = parse();
 		int x = 1;
-	}
+	} // HTML(String)
 
+	// +---------+--------------------------------------------------
+	// | Methods |
+	// +---------+
+	
 	/**
 	 * Creates a DOM object tree of the html string input
 	 * 
@@ -57,7 +70,7 @@ public class HTMLParser {
 
 		return new DOM(nodes.get(0));
 
-	}
+	} // parse()
 
 	/**
 	 * Creates an array implementation of the DOM tree
@@ -75,7 +88,7 @@ public class HTMLParser {
 
 		}
 		return nodes;
-	}
+	} // parseNodes()
 
 	/**
 	 * Checks if our parser has reached the end of the html string.
@@ -84,16 +97,17 @@ public class HTMLParser {
 	 */
 	public boolean eof() {
 		return (currPos >= input.length());
-	}
+	} // eof()
 
 	/**
-	 * 
+	 * Tests if there is a substring in input, beginning at currPos,
+	 * that is equivalent to the given String str 
 	 * @param str
 	 * @return
 	 */
 	public boolean beginsWith(String str) {
 		return (input.substring(currPos, currPos + str.length())).compareTo(str) == 0;
-	}
+	} // beginsWith(String)
 
 	/**
 	 * Creates a substring starting with the char at currpos of the String input to
@@ -116,8 +130,15 @@ public class HTMLParser {
 			currPos++;
 		}
 		return res;
-	}
+	} // consumeWhile()
 
+	/**
+	 * Counts the number of characters starting from currPos
+	 * that satisfies the predicate charTest
+	 * @param charTest, Predicate<Character>
+	 * @return i, the number of characters that satisfy charTest starting from and including
+	 * the character at currPos
+	 */
 	public int advanceWhile(Predicate<Character> charTest)
 	{
 		int i = 0;
@@ -128,17 +149,12 @@ public class HTMLParser {
 		if(currPos + i >= input.length())
 			return 0;
 		return i;
-	}
+	} // advanceWhile(Predicate<Character>)
 
 
 	/**
 	 * Creates a complete Node and its corresponding children starting from currpos
 	 * 
-	 * // this checks for /br tag
-			if (input.substring(currPos, currPos + 5).compareTo("</br>") == 0) {
-				currPos += 5;
-				return new Element(new ArrayList<Node>(), "br", new HashMap<String, String>());
-			} else
 	 * @return
 	 */
 	public Node parseNode() {
@@ -149,7 +165,7 @@ public class HTMLParser {
 		}
 		else
 			return parseText();
-	}
+	} // parseNode()
 
 	/**
 	 * Creates an Element Node along with its corresponding children
@@ -175,7 +191,7 @@ public class HTMLParser {
 			currPos++; // skip >
 			return new Element(children, tagName, attributes);
 		}
-	}
+	} // parseElement()
 
 	/**
 	 * Checks if a html tag name corresponds to an html single tag
@@ -189,7 +205,7 @@ public class HTMLParser {
 	public boolean isSingleTagElement(String tagName) {
 		return  SingletonTags.contains(tagName);
 
-	}
+	} // isSingleTagElement(String)
 
 	/**
 	 * Retrieves the attributes of an html tag found in its opening tag
@@ -215,7 +231,7 @@ public class HTMLParser {
 				currPos++;
 		}
 		return attributes;
-	}
+	} // parseAttributes()
 
 	/**
 	 * Constructs a Text Node
@@ -224,7 +240,7 @@ public class HTMLParser {
 	 */
 	public Text parseText() {
 		return new Text(consumeWhile(c -> c != '<'));
-	}
+	} // parseText()
 
 	/**
 	 * Changes currpos to the index of the next non-whitespace character. currpos is
@@ -232,7 +248,7 @@ public class HTMLParser {
 	 */
 	public void consumeWhiteSpace() {
 		consumeWhile(c -> Character.isWhitespace(c));
-	}
+	} // consumeWhiteSpace()
 
 	/**
 	 * Determines the tag name of the html tag whose '<' is at currpos
@@ -241,7 +257,7 @@ public class HTMLParser {
 	 */
 	public String parseName() {
 		return consumeWhile(c -> Character.isLetterOrDigit(c));
-	}
+	} // parseName()
 
 	/**
 	 * Retrieves the attributes of the html tag
@@ -257,7 +273,7 @@ public class HTMLParser {
 			return consumeWhile(c -> !Character.isWhitespace(c));
 		}
 
-	}
+	} // parseAttrValue()
 
 	/**
 	 * Removes the comments from an html string Source :
@@ -287,7 +303,7 @@ public class HTMLParser {
 			input = "<html>" + input;
 		if(!input.contains("</html>"))
 			input += "</html>";
-	}
+	} // clean()
 
 	public static void main(String[] args) throws Exception {
 
@@ -295,6 +311,6 @@ public class HTMLParser {
 				"<A HREF=\"http://www.villanova.edu/artsci/mathematics/\", target=\"_blank\"> Villanova\n"
 						+ "                                 University</a>.");
 		// test.dom.print();
-	}
+	} // main(String[])
 
-} // HTMLParser
+} // Class HTMLParser
