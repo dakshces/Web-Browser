@@ -322,7 +322,7 @@ class Declaration {
 		str += name + "=" + value;
 		return str;
 	} // toString()
-} // Class Declaration
+} // class Declaration
 
 /**
  * This class represents the value assigned to a property
