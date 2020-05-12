@@ -3,19 +3,25 @@ package renderingengine;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-//Not sure if we need all of ,net
-import java.net.*;
 
+/**
+ * This is the Main function to our Rendering Engine.
+ * 
+ * @author Daksh Aggarwal
+ * @author Davin Lin
+ */
 public class Main {
 
 	/**
-	 * Creates a string out of a local file
-	 * @param f
-	 * @return
-	 * @throws FileNotFoundException
+	 * Creates a string out of a local file.
+	 * @param f a {@code File}.
+	 * @return a string containing each line of the specified file.
+	 * @throws FileNotFoundException if the specified file is not found.
 	 */
 	public static String fileToString(File f) throws FileNotFoundException {
 		Scanner sc = new Scanner(f);
@@ -28,11 +34,10 @@ public class Main {
 	} // fileToString(File)
 
 	/**
-	 * Retrieves the links to stylesheets found in the children of the head
-	 * tag.
-	 * @param d
-	 * @param URL
-	 * @return
+	 * Retrieves the links to stylesheets under the head tag.
+	 * @param d a {@code DOM}
+	 * @param URL a {@code String}
+	 * @return an {@code ArrayList} containing each of the links to stylesheets found under the head tag.
 	 */
 	public static ArrayList<String> getStylesheetLinks(DOM d, String URL) {
 		
@@ -73,9 +78,9 @@ public class Main {
 	} // getStylesheetLinks(DOM, String)
 	
 	/**
-	 * Tests if there is a substring in input, beginning at currPos,
-	 * that is equivalent to the given String str 
-	 * @param str
+	 * Tests if the specified string str begins with the specified string prefix.
+	 * @param str a {@code String}
+	 * @param prefix a {@code String}
 	 * @return
 	 */
 	public static boolean beginsWith(String str, String prefix) {
@@ -83,10 +88,10 @@ public class Main {
 	} // beginsWith(String)
 	
 	/**
-	 * NOT SAFE. If not enough directories in url, may fail
-	 * @param url
-	 * @param ext
-	 * @return
+	 * NOT SAFE. If not enough directories in url, may fail.
+	 * @param url a url string.
+	 * @param ext an extension string to be added to the url string.
+	 * @return a string that represents the url to ext.
 	 */
 	public static String urlExtension(String url, String ext) {
 		// turn url into a string for a directory
@@ -108,10 +113,12 @@ public class Main {
 	/**
 	 * Grabs the html file from link. if url string does not end
 	 * in .html, then we default to index.html
-	 * @param url
-	 * @return
-	 * @throws IOException
-	 * @source https://stackoverflow.com/questions/31462/how-to-fetch-html-in-java 
+	 * @param url a {@code URL} object of the html file to convert into string.
+	 * @return the html string found in the specified url.
+	 * @throws IOException if an I/O exception occurs when the connection to the specified
+	 * url is opened.
+	 * @see <a href="https://stackoverflow.com/questions/31462/how-to-fetch-html-in-java"> 
+	 * How to Fetch Html in Java</a>
 	 */
 	public static String fileFromURLToString(URL url) throws IOException {
 		String content = null;
@@ -159,7 +166,7 @@ public class Main {
 		Stylesheet sheet;
 		StyleTree sty;
 		Dimensions bounds;
-		LayoutTree layout;		
+		LayoutTree layout;	
 		
 		/* Local Testing
 		 * To test on a local file named html.txt.
