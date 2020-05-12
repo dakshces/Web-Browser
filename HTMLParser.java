@@ -13,8 +13,6 @@ import java.util.Scanner;
  * <p> A {@code HTMLParser} reads its input character by character to
  * construct a Document Object Model of its input.
  * 
- * @author Daksh Aggarwal
- * @author Davin Lin
  * @see 
  * <a href=https://limpet.net/mbrubeck/2014/08/11/toy-layout-engine-2.html>Matt Brubeck</a>
  */
