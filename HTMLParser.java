@@ -10,7 +10,9 @@ import java.util.Scanner;
  * An extended version of the HTML parser component of the
  * HTML rendering engine tutorial written by Matt Brubeck.
  * 
- * <p> A {@code HTMLParser} reads its input character by character to
+ * <p> An HTML specific implementation of the abstract class {@code Parser}.
+ * 
+ * <p> An {@code HTMLParser} reads its input character by character to
  * construct a Document Object Model of its input.
  * 
  * @see 
