@@ -225,11 +225,4 @@ public class HTMLParser extends Parser {
 			input += "</html>";
 	} // clean()
 
-	public static void main(String[] args) throws Exception {
-
-		HTMLParser test = new HTMLParser(
-				"<A HREF=\"http://www.villanova.edu/artsci/mathematics/\", target=\"_blank\"> Villanova\n"
-						+ "                                 University</a>.");
-	} // main(String[])
-
 } // Class HTMLParser
