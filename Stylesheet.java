@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * An {@code ArrayList} implementation of a CSS Stylesheet model.
  */
 public class Stylesheet {
-	// +--------+-----------------------------
+	// +--------+------------------------------
 	// | Fields |
 	// +--------+
 	ArrayList<Rule> rules;
