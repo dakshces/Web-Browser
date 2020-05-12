@@ -5,93 +5,111 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-public class Node 
-{
+public class Node {
+	
+	// +--------+------------------------------
+	// | Fields |
+	// +--------+
 	ArrayList<Node> children;
 
-	public Node()
-	{
+	// +--------------+-------------------------------------------
+	// | Constructors |
+	// +--------------+
+
+	public Node() {
 		children = new ArrayList<Node>();
-	}
-	
-	public Node(ArrayList<Node> children)
-	{
+	} // Node()
+
+	public Node(ArrayList<Node> children) {
 		this.children = children;
+	} // Node(ArrayList<Node>)
+
+}// class Node
+
+class Text extends Node {
+
+	// +--------+------------------------------
+	// | Fields |
+	// +--------+
+	String txt;
+	Font font;
+
+	// +--------------+-------------------------------------------
+	// | Constructors |
+	// +--------------+
+	public Text() {
+		super();
+		this.txt = "";
+		this.font = null;
 	}
+
+	public Text(String txt) {
+		super();
+		this.txt = txt;
+		font = null;
+	}
+
+	@Override
+	public String toString() {
+		return txt;
+	}
+} // class Text
+
+class Element extends Node {
 	
-	}
-	class Text extends Node
-	{
-		String txt;
-		Font font;
+	// +--------+------------------------------
+	// | Fields |
+	// +--------+
+	String tagName;
+	HashMap<String, String> attributes;
 
-		public Text()
-		{
-			super();
-			this.txt = "";
-			this.font = null;
+	// +--------------+-------------------------------------------
+	// | Constructors |
+	// +--------------+
+	public Element(String tagName, HashMap<String, String> attributes) {
+		super();
+		this.tagName = tagName;
+		this.attributes = attributes;
+	} // Element(String, HashMap<String, String>
+
+	public Element(ArrayList<Node> children, String tagName, HashMap<String, String> attributes) {
+		super(children);
+		this.tagName = tagName;
+		this.attributes = attributes;
+	} // Elemenet(ArrayList<Node>, String, HashMap<String, String>
+
+
+	// +---------+-------------------------------------------
+	// | Methods |
+	// +---------+
+	
+	/**
+	 * Finds and returns an ArrayList containg the value
+	 * assignment to a given property for our Node
+	 * @param property
+	 * @return
+	 */
+	public ArrayList<String> getValue(String property) {
+		ArrayList<String> value = new ArrayList<String>();
+		if (!attributes.containsKey(property)) {
+			value.add("");
 		}
 
-		public Text(String txt)
-		{
-			super();
-			this.txt = txt;
-			font = null;
+		else if (property.compareTo("id") == 0) {
+			value.add(attributes.get(property));
 		}
-		
-		public String toString() 
-		{
-			return txt;
+
+		else if (property.compareTo("class") == 0) {
+			String[] classes = attributes.get(property).split(" ");
+			Collections.addAll(value, classes);
 		}
-	}
 
-	class Element extends Node
-	{
-		String tagName;
-		HashMap<String,String> attributes; 
+		return value;
+	} // getValue(String)
 
-		public Element(String tagName, HashMap<String,String> attributes)
-		{
-			super();
-			this.tagName = tagName;
-			this.attributes = attributes;
-		}
-		
-		public Element(ArrayList<Node> children, String tagName, HashMap<String,String> attributes)
-		{
-			super(children);
-			this.tagName = tagName;
-			this.attributes = attributes;
-		}
-		
-		public ArrayList<String> getValue(String key)
-		{
-			ArrayList<String> value = new ArrayList<String>();
-			if(!attributes.containsKey(key))
-			{
-				value.add("");
-			}
-			
-			else if(key.compareTo("id") == 0)
-			{
-				value.add(attributes.get(key));
-			}
-			
-			else if(key.compareTo("class") == 0)
-			{
-				String [] classes = attributes.get(key).split(" ");
-				Collections.addAll(value, classes);
-			}
-			
-			return value;
-		}
-		
-		@Override
-		public String toString() {
-			return tagName + " " + attributes.toString();
-		}
-	}
-
-
-
-
+	@Override
+	public String toString() {
+		return tagName + " " + attributes.toString();
+	} // toString()
+	
+} // class Element
