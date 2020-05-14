@@ -1,0 +1,63 @@
+address,
+article,
+aside,
+blockquote,
+body,
+details,
+dialog,
+dd,
+div,
+dl,
+dt,
+fieldset,
+figcaption,
+figure,
+footer,
+form,
+h1, h2, h3, h4, h5, h6,
+header,
+html,
+hgroup,
+hr,
+li,
+main,
+nav,
+ol,
+p,
+pre,
+section,
+table,
+ul
+{ display: block; }
+
+i, em { font-style: italic; }
+
+bold, b, strong { font-weight: bold; }
+
+h1 {
+  font-size: 40pt;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+}
+
+h2 {
+  font-size: 30pt;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+}
+
+h3 {
+  font-size: 25pt;
+  margin-top: 15x;
+  margin-bottom: 15px;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+}
+
