@@ -17,7 +17,7 @@ Eclipse IDE
 ### Installing
 
 * [Github Link](https://github.com/dakshces/Web-Browser)
-Go to the above link and download the finished Eclipse Java project from the master branch.
+Go to the mentioned link and download the finished Eclipse Java project from the master branch.
 
 Eclipse Instructions
 --------------------
