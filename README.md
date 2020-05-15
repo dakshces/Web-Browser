@@ -44,7 +44,7 @@ Eclipse Instructions
 
 ## Acknowledgments
 
-Much thanks to Professor Fahmida Hamid for inspiring the project idea, Professor Jennifer Paulhus for allowing the use of her homepage in our default settings, and Matt Brubeck for providing the base design of this project.
+Much thanks to Professor Fahmida Hamid for inspiring the project idea, Professor Jennifer Paulhus for allowing the use of her homepage in our default settings, and Matt Brubeck for his tutorial which helped us build the base design of this project.
 
 * [Professor Fahmida Hamid](https://www.cs.grinnell.edu/~hamidfah/)
 * [Professor Jennifer Paulhus](https://paulhus.math.grinnell.edu/)
